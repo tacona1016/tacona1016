@@ -1,0 +1,31 @@
+name: fetch-yfinance
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - name: Set environment
+        run: |
+          echo 'DB_PATH=data/market.sqlite3' >> $GITHUB_ENV
+          echo 'TICKERS=${{ secrets.TICKERS }}' >> $GITHUB_ENV
+          echo 'DEFAULT_START=${{ secrets.DEFAULT_START }}' >> $GITHUB_ENV
+      - name: Fetch & Load
+        run: python jobs/fetch_and_load.py
+      - name: Commit updated DB
+        run: |
+          git config user.name 'github-actions'
+          git config user.email 'actions@github.com'
+          git add data/market.sqlite3 || true
+          git commit -m "Update DB $(date -u +'%Y-%m-%dT%H:%M:%SZ')" || echo 'No changes'
+          git push
