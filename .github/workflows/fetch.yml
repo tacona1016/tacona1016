@@ -29,3 +29,6 @@ jobs:
           git add data/market.sqlite3 || true
           git commit -m "Update DB $(date -u +'%Y-%m-%dT%H:%M:%SZ')" || echo 'No changes'
           git push
+      - name: List data dir (debug)
+        run: ls -al data || true
+
