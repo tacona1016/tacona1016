@@ -7,8 +7,12 @@ venv/
 .env
 
 # Data
-data/*.sqlite3
-data/backup/
+- data/*.sqlite3
++ # 모든 data 아래는 무시
++ data/*
++ # 단, 이 두 파일/폴더는 추적
++ !data/.gitkeep
++ !data/market.sqlite3
 
 # OS
 .DS_Store
