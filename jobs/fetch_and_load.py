@@ -8,7 +8,7 @@ from db import get_conn, init_db, UPSERT_PRICE
 load_dotenv()
 init_db()
 
-TICKERS = [x.strip().upper() for x in os.getenv('TICKERS', 'AAPL,MSFT,TSLA').split(',') if x.strip()]
+TICKERS = [x.strip().upper() for x in os.getenv('TICKERS', 'AAPL,MSFT,TSLA,GC=F,SI=F').split(',') if x.strip()]
 DEFAULT_START = os.getenv('DEFAULT_START', '2015-01-01')
 
 def get_last_date(conn, ticker):
