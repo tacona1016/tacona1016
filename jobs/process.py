@@ -3,8 +3,6 @@ import psycopg2
 import yfinance as yf
 import os
 from dotenv import load_dotenv
-import seaborn as sns
-import matplotlib.pyplot as plt
 from sqlalchemy import create_engine, text
 import warnings
 
