@@ -1,5 +1,5 @@
-yfinance==0.2.*
-pandas==2.*
-SQLAlchemy==2.*
-python-dotenv==1.*
-streamlit==1.*
+yfinance
+pandas
+psycopg2-binary
+python-dotenv
+sqlalchemy

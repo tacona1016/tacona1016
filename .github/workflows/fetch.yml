@@ -1,34 +1,33 @@
-name: fetch-yfinance
+name: DB update
+
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '30 0 * * *'  # 매일 00:00 UTC → 한국시간 오전 9시
   workflow_dispatch:
 
 jobs:
-  run:
+  update:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          lfs: false
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - run: pip install -r requirements.txt
-      - name: Set environment
-        run: |
-          echo 'DB_PATH=data/market.sqlite3' >> $GITHUB_ENV
-          echo 'TICKERS=${{ secrets.TICKERS }}' >> $GITHUB_ENV
-          echo 'DEFAULT_START=${{ secrets.DEFAULT_START }}' >> $GITHUB_ENV
-      - name: Fetch & Load
-        run: python jobs/fetch_and_load.py
-      - name: Commit updated DB
-        run: |
-          git config user.name 'github-actions'
-          git config user.email 'actions@github.com'
-          git add data/market.sqlite3 || true
-          git commit -m "Update DB $(date -u +'%Y-%m-%dT%H:%M:%SZ')" || echo 'No changes'
-          git push
-      - name: List data dir (debug)
-        run: ls -al data || true
 
+    env:
+      SUPABASE_DB: ${{ secrets.SUPABASE_DB }}
+      SUPABASE_USER: ${{ secrets.SUPABASE_USER }}
+      SUPABASE_PASSWORD: ${{ secrets.SUPABASE_PASSWORD }}
+      SUPABASE_HOST: ${{ secrets.SUPABASE_HOST }}
+      SUPABASE_PORT: ${{ secrets.SUPABASE_PORT }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run update script
+        run: python jobs/process.py
