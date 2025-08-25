@@ -35,7 +35,8 @@ for col in df.columns:
     if col == "date":
         pass
     else :
-        df[f"{col}_monthly"] = df[col].pct_change(21)
+        df[f"{col}_mom"] = df[col].pct_change(21)
+        df[f"{col}_mdd"] = df[col] / df[col].cummax() -1
 
 df['금/은'] = df['금']/df['은']
 
